@@ -9,10 +9,7 @@ body {
     text-align: left;
 }
 
-@font-face {
-    font-family: 'CascadiaCode';
-    src: url('CascadiaCode.ttf');
-}
+@import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css");
 
 p {
     color: rgb(192, 192, 192);
@@ -47,7 +44,7 @@ p {
     margin: 48px;
     text-align: center;
     /* font-family: 'Courier New', Courier, monospace; */
-    font-family: 'CascadiaCode';
+    font-family: 'Cascadia Code';
     font-size: 48px;
     font-weight: bolder;
 }
@@ -57,7 +54,7 @@ p {
     margin-top: 24px;
     margin-bottom: 24px;
     /* font-family: 'Courier New', Courier, monospace; */
-    font-family: 'CascadiaCode';
+    font-family: 'Cascadia Code';
     font-size: 36px;
     font-weight: bolder;
 }
