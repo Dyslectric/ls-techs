@@ -9,6 +9,11 @@ body {
     text-align: left;
 }
 
+@font-face {
+    font-family: 'CascadiaCode';
+    src: url('CascadiaCode.ttf');
+}
+
 p {
     color: rgb(192, 192, 192);
     margin: 16px;
@@ -41,7 +46,8 @@ p {
     -webkit-text-fill-color: transparent;
     margin: 48px;
     text-align: center;
-    font-family: 'Courier New', Courier, monospace;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: 'CascadiaCode';
     font-size: 48px;
     font-weight: bolder;
 }
@@ -50,7 +56,8 @@ p {
     margin-left: 0px;
     margin-top: 24px;
     margin-bottom: 24px;
-    font-family: 'Courier New', Courier, monospace;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: 'CascadiaCode';
     font-size: 36px;
     font-weight: bolder;
 }
