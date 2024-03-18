@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>$title$ - ls ./techs</title>
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css">
+	</head>
+	<body>
+		<p class="site-title">
+			[dave@dyslectric ~]$$ ls ./techs
+		</p>
+		<button onclick="scroll_to_top()" id="scroll-up-btn">
+			<img src="nav-arrow-up.svg" id="scroll-up-btn-svg"/>
+		</button>
+		<p class="rainbow-letters center-align">
+			site is a work in progress<br>
+			depth will be added in the future
+		</p>
+		<div class="center-column">
+			$body$
+		</div>
+	</body>
+</html>
+
+<script>
+let mybutton = document.getElementById("scroll-up-btn");
+
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (
+	  document.body.scrollTop > 20 ||
+	  document.documentElement.scrollTop > 20
+  ) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function scroll_to_top() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
