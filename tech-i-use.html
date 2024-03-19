@@ -1,62 +1,83 @@
 <!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>Tech I Use - ls ./techs</title>
+		<title>Technologies That I Use - ls ./techs</title>
 		<link rel="stylesheet" href="styles.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css">
 	</head>
 	<body>
-		<p class="site-title">
+
+		<button onclick="scroll_to_top()" id="scroll-up-btn">
+			<svg width="100%" height="100%" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M6 15L12 9L18 15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
+
+		<button onclick="openNav()" id="nav-menu-button">
+			<svg width="24" height="24" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M3 5H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M3 12H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M3 19H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
+
+		<div id="mySidenav" class="sidenav">
+  			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  			<a href="./tech-i-use.html">Technologies I Use</a>
+  			<a href="#">Articles</a>
+  			<a href="./about.html">About</a>
+		</div>
+
+		<p class="site-title rainbow-letters">
 			[dave@dyslectric ~]$ ls ./techs
 		</p>
-		<button onclick="scroll_to_top()" id="scroll-up-btn">
-			<img src="nav-arrow-up.svg" id="scroll-up-btn-svg"/>
-		</button>
 		<p class="rainbow-letters center-align">
 			site is a work in progress<br>
 			depth will be added in the future
 		</p>
 		<div class="center-column">
-			<h1 id="project-management">Project Management:</h1>
+			<h1 id="technologies-that-i-use">Technologies That I Use</h1>
+<h2 id="project-management">Project Management:</h2>
 <ul>
 <li>Git: the only ubiquitous version control system</li>
 </ul>
-<h1 id="communication">Communication:</h1>
+<h2 id="communication">Communication:</h2>
 <ul>
 <li>Excalidraw: free, open source, and extremely easy to use diagram
 illustrator</li>
 <li>PlantUML: generate many different types of UML diagrams from
 text</li>
 </ul>
-<h1 id="build-systems">Build Systems:</h1>
+<h2 id="build-systems">Build Systems:</h2>
 <ul>
 <li>CMake: makes building your C++ application easy with any toolchain
 and on any operating system</li>
 </ul>
-<h1 id="cloud-providers-and-protocols">Cloud Providers and
-Protocols:</h1>
+<h2 id="cloud-providers-and-protocols">Cloud Providers and
+Protocols:</h2>
 <p>Currently, I run all of my own services (which are only a few
 personal ones) on my own hardware (a Dell Precision 7810). That is with
 the exception of this site which is, clearly, on Github pages. I will
 add more to this section as I gain knowledge in and experience with
 cloud systems.</p>
-<h1 id="operating-systems">Operating System(s):</h1>
+<h2 id="operating-systems">Operating System(s):</h2>
 <ul>
 <li>Arch Linux: the quintessential rolling-release Linux
 distribution</li>
 <li>Proxmox Virtual Environment: an open-source type-one hypervisor
 built on top of Debian Linux</li>
 </ul>
-<h1 id="text-editors">Text Editor(s):</h1>
+<h2 id="text-editors">Text Editor(s):</h2>
 <ul>
 <li>Visual Studio: fully-featured, cross-platform, free, open-source,
 most widely-used text-editor</li>
 <li>Neovim: extremely minimalist and extensibile, cross-platform, free,
 and open-source editor based on the ubiquitous editor, vim</li>
 </ul>
-<h1 id="package-repositories-and-managers">Package Repositories and
-Managers:</h1>
+<h2 id="package-repositories-and-managers">Package Repositories and
+Managers:</h2>
 <ul>
 <li>Cargo: rust source package manager and build system, sources from
 crates.io respository</li>
@@ -91,4 +112,13 @@ function scroll_to_top() {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
 }
+
+function openNav() {
+  document.getElementById("mySidenav").style.width = "420px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
 </script>
