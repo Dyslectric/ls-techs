@@ -1,6 +1,9 @@
 ---
 title: Technologies That I Use
+page_type: article
+article_search: false
 ---
+
 # Technologies That I Use
 
 ## Project Management:
