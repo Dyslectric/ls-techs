@@ -11,5 +11,6 @@ This site will serve as a blog for my school projects and personal projects, as
 well as for information that I feel can be useful to my fellow classmates and
 especially my fellow lifelong learners.
 
-* Email: dgreen2001personal@gmail.com
+* Email: dyslectricdave@gmail.com
 * GitHub: https://github.com/Dyslectric
+
