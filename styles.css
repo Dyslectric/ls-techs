@@ -34,13 +34,12 @@ svg {
     height: 100%;
 }
 
-/*
 ul {
-    padding: 0rem;
-	margin: 0;
-	margin-left: 4rem;
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
-*/
 
 li {
     max-width: 53ch;
@@ -150,6 +149,7 @@ h2 {
 
 .sidenav a:hover {
   /*color: #5f5f5f;*/
+    max-width: fit-content;
     background: linear-gradient(to right, #9b312f, #613aa3, #2196f3, #43a047, #adb91f, #c2821c, #9b312f);
     background-clip: text;
     -webkit-background-clip: text;
