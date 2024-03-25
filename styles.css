@@ -96,6 +96,7 @@ h2 {
 }
 
 #scroll-up-btn {
+    display: none;
     background-color: transparent;
 	position: fixed;
     border: none;
