@@ -3,7 +3,7 @@ title: About Me
 ---
 
 # About Me
-My name is David Green and I am a Computer Science student at Franciscan
+My name is David Green. I am a Computer Science student at Franciscan
 University of Steubenville. I am 22 years old and have been programming for some
 years; despite this, I have never built any kind of serious website before 2024.
 
