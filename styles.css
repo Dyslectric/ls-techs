@@ -22,8 +22,8 @@ svg {
 .center-column {
     position: absolute;
     background-color: inherit;
-    left: 10vw;
-    right: 10vw;
+    left: 11vw;
+    right: 11vw;
 }
 
 .bg-fill {
@@ -100,8 +100,8 @@ h2 {
 	position: fixed;
     border: none;
     padding: 0;
-	top: 2vw;
-	right: 2vw;
+	top: 3vw;
+	right: 3vw;
     width: 8vw;
     height: 8vw;
 	max-width: 50px;
@@ -113,8 +113,8 @@ h2 {
 	position: fixed;
     border: none;
     padding: 0;
-	top: 2vw;
-	left: 2vw;
+	top: 3vw;
+	left: 3vw;
     width: 8vw;
     height: 8vw;
 	max-width: 50px;
