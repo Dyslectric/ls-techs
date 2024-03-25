@@ -12,7 +12,7 @@ append_to_json() {
 
 convert_to_html() {
 	path="$1"
-	pandoc --template template.html "$path" -o "${path%.md}.html" #--filter pandoc-plantuml
+	pandoc --template template.html "$path" -o "${path%.md}.html" --filter "$HOME/.local/bin/pandoc-plantuml"
 }
 
 process_markdown_file() {
