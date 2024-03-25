@@ -5,10 +5,10 @@ body {
 }
 
 p {
-    max-width: 36em;
-	padding: 12px;
+    max-width: 56ch;
+	padding: 1rem;
 	margin: auto;
-    font-size: 1.125vw;
+    font-size: 1.375rem;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 175%;
 }
@@ -20,35 +20,49 @@ svg {
 }
 
 .center-column {
+    position: absolute;
+    background-color: inherit;
+    left: 10vw;
+    right: 10vw;
+}
+
+.bg-fill {
+    position: fixed;
+    background-color: inherit;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 ul {
-	margin: 1vw;
+	margin: 0;
 }
 
 li {
-    max-width: 36em;
+    max-width: 56ch;
 	margin: auto;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 1.125vw;
+    font-size: 1.375rem;
     line-height: 175%;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 h1 {
-    max-width: 36em;
+    max-width: 44ch;
 	margin: auto;
     font-family: 'Cascadia Code';
     font-weight: bolder;
-	padding: 1vw;
-	font-size: 1.75vw;
+	padding: 1rem;
+    font-size: 2.375rem;
 }
 
 h2 {
-    max-width: 36em;
-	padding: 1vw;
+    max-width: 44ch;
+	padding: 1rem;
 	margin: auto;
     font-family: 'Cascadia Code';
-    font-size: 1.5vw;
+    font-size: 2rem;
     font-weight: bolder;
 }
 
@@ -66,15 +80,16 @@ h2 {
 }
 
 .site-title {
+    position: relative;
     text-align: center;
     /* font-family: 'Courier New', Courier, monospace; */
     font-family: 'Cascadia Code';
     font-weight: bolder;
 	padding-left: 0px;
 	padding-right: 0px;
-	font-size: 3vw;
-	padding-bottom: 5vw;
-	padding-top: 5vw;
+	font-size: 3.375vw;
+	padding-bottom: 3rem;
+	padding-top: 3rem;
 }
 
 #scroll-up-btn {
@@ -104,8 +119,8 @@ h2 {
 }
 
 .sidenav {
-  height: 100%;
   width: 0;
+  height: 0%;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -117,7 +132,7 @@ h2 {
 }
 
 .sidenav a {
-  font-size: 32px;
+  font-size: 2rem;
   font-family: Arial, Helvetica, sans-serif;
   padding: 8px 8px 8px 32px;
   text-decoration: none;
@@ -141,8 +156,33 @@ h2 {
   margin-left: 50px;
 }
 
+.sidenav .closebtn:hover {
+  color: #5f5f5f;
+}
+
+@media screen and (min-width: 1366px) {
+    .site-title {
+        font-size: 2.88rem;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+    h2 {
+        font-size: 1.25rem;
+    }
+    p {
+        font-size: 1rem;
+    }
+    li {
+        font-size: 1rem;
+        padding-left: 0.5rem;
+    }
+}
+
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
-
