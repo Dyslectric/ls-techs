@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+</body>
+</html>
+<script>
+
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 480;
+canvas.height = 720;
+document.body.appendChild(canvas);
+
+let spacebar_down = false;
+
+document.addEventListener('keyup', function(e){if(e.keyCode == 32) {spacebar_down = false}});
+document.addEventListener('keydown', function(e){if(e.keyCode == 32) {spacebar_down = true}});
+
+function loadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
+//const canvas = document.getElementById('canvas');
+//const ctx = canvas.getContext('2d');
+
+function get_now() {
+    return new Date().getTime() / 1000;
+}
+
+const LANDER_WEIGHT = 4740;
+const BIG_G = 6.67e-11;
+const WEIGHT_OF_MOON = 7.347e22;
+const RADIUS_OF_MOON = 1740000;	//radius in m
+const FORCE_FROM_THRUSTERS = 4000;	//in Newtons
+const BURN_RATE = 8.21;		//in kg/s
+const PI = 3.14159265358979323846;
+
+class Game {
+    constructor() {
+        this.height = 2000;
+        this.fuel = 8;
+        this.velocity = 100;
+        this.thruster_on = false;
+        this.last_update = get_now();
+        this.run();
+    }
+    update() {
+        this.thruster_on = spacebar_down;
+        let now = get_now();
+        let time_since_last_update = now - this.last_update;
+        this.last_update = now;
+
+        let acceleration = (BIG_G * WEIGHT_OF_MOON) / (RADIUS_OF_MOON + this.height) ** 2;
+
+        this.height -= this.velocity * time_since_last_update;
+
+        if(this.thruster_on && this.fuel > 0.0) {
+            this.velocity -= FORCE_FROM_THRUSTERS / (this.fuel + LANDER_WEIGHT);
+            this.fuel -= BURN_RATE * time_since_last_update;
+        }
+
+        this.velocity += acceleration * time_since_last_update;
+    }
+
+    draw() {
+        // Draw surface image
+        //const surfaceImg = new Image();
+        //surfaceImg.onload = function() {
+        //};
+        //surfaceImg.src = '/assets/surface.jpg';
+
+        var startColor = "ff0000";
+        var endColor = "00ff00";
+
+        let shipImg = this.shipImg;
+        let surfaceImg = this.surfaceImg;
+        let thrusterImg = this.thrusterImg;
+
+        ctx.fillStyle = '#000'; // Set background color
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+        ctx.drawImage(surfaceImg, 0, canvas.height - surfaceImg.height * (canvas.width / surfaceImg.width), canvas.width, surfaceImg.height * (canvas.width / surfaceImg.width));
+
+        const shipY = ((2000 - this.height) / 2000) * canvas.height;
+
+        if(this.thruster_on && this.fuel > 0) {
+            ctx.scale(1,-1);
+            ctx.drawImage(thrusterImg, (canvas.width - shipImg.width) / 2 - 35, -(shipY + 205), 150, 150);
+            ctx.scale(1,-1);
+        }
+
+        ctx.drawImage(shipImg, (canvas.width - shipImg.width) / 2, shipY, shipImg.width, shipImg.height);
+    
+        // Draw text
+        const velocityText = `Velocity: ${Math.floor(this.velocity)}m/s`;
+        const heightText = `Height: ${Math.floor(this.height)}m`;
+        ctx.fillStyle = '#FFF'; // Set text color
+        ctx.font = '24px sans-serif'; // Set font
+        ctx.fillText(velocityText, 12, 56);
+        ctx.fillText(heightText, 12, 88);
+        ctx.fillText("Fuel", 400, 56)
+
+        var gradient = ctx.createLinearGradient(0, 0, (this.fuel / 8) * canvas.width, 0);
+        gradient.addColorStop(0, 'transparent');
+        gradient.addColorStop(0.0001, 'red');
+        gradient.addColorStop(0.5, 'yellow');
+        gradient.addColorStop(0.9999, 'green');
+        gradient.addColorStop(1, 'transparent');
+
+        // Fill the canvas with the gradient
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, 10);
+    }
+
+    async run() {
+        this.surfaceImg = await loadImage('assets/surface.jpg');
+        this.shipImg = await loadImage('assets/space-sprites/PNG/playerShip1_blue.png');
+        this.thrusterImg = await loadImage('assets/fire_particle.png');
+        console.log(this.thrusterImg)
+
+        while(true) {
+            this.update();
+            this.draw();
+            await new Promise(resolve => setTimeout(resolve)); // Add delay between iterations
+        }
+    }
+};
+
+new Game();
+
+</script>
