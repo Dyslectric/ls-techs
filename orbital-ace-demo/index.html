@@ -112,8 +112,6 @@ class SpaceView {
             radius: 12
         };
 
-        const sub_player_bar = [];
-
         for(let i = 0; i < 5; i++) {
             let teammate_bar = {
                 x: 20,
@@ -177,8 +175,8 @@ class SpaceView {
         ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
         /** @type {CanvasGradient} */
         let outer_gradient = ctx.createRadialGradient(x + radius, y + radius, radius, x + radius, y + radius, 0);
-        outer_gradient.addColorStop(0.30, '#040404f8');
-        outer_gradient.addColorStop(0.235, '#000000f8');
+        outer_gradient.addColorStop(0.30, '#040404b0');
+        outer_gradient.addColorStop(0.235, '#000000b0');
         outer_gradient.addColorStop(0.0001, '#00000000');
 
         ctx.fillStyle = outer_gradient;
@@ -221,18 +219,70 @@ class SpaceView {
         ctx.fill();
 
         // glare
-        let glare_radius = 14;
+        let glare_radius = 24;
         let glare_x = 30;
         let glare_y = -30
         ctx.beginPath();
-        ctx.arc(x + radius + glare_x, y + radius + glare_y, 16, 0, Math.PI * 2);
+        ctx.arc(x + radius + glare_x, y + radius + glare_y, glare_radius, 0, Math.PI * 2);
         let glare_gradient = ctx.createRadialGradient(x + radius + glare_x, y + radius + glare_y, glare_radius, x + radius + glare_x, y + radius + glare_y, 0);
-        glare_gradient.addColorStop(0.01, '#00000000');
-        glare_gradient.addColorStop(0.9, '#ffffff20');
-        glare_gradient.addColorStop(1.0, '#ffffff20');
+        glare_gradient.addColorStop(0.02, '#00000000');
+        //glare_gradient.addColorStop(0.9, '#00000000');
+        glare_gradient.addColorStop(1.0, '#cfcfcf20');
         ctx.fillStyle = glare_gradient;
         ctx.fill();
 
+        // ruler (light seconds)
+        let ruler_length = 0.5;
+        let ruler_bottom_from_compass = 12;
+        let ruler_start = {
+            x: x + radius,
+            y: y + radius - inner_radius - ruler_bottom_from_compass
+        };
+
+        ctx.strokeStyle = '#ffffffff';
+        ctx.setLineDash([1, 0]); // 5 pixels on, 5 pixels off
+
+        ctx.beginPath();
+        ctx.moveTo(ruler_start.x, ruler_start.y);
+        ctx.lineTo(ruler_start.x, ruler_start.y - 3);
+        ctx.lineTo(ruler_start.x + (inner_radius / 2), ruler_start.y - 3);
+        ctx.lineTo(ruler_start.x + (inner_radius / 2), ruler_start.y);
+        ctx.lineTo(ruler_start.x + (inner_radius / 2), ruler_start.y - 3);
+        ctx.lineTo(ruler_start.x + inner_radius, ruler_start.y - 3);
+        ctx.lineTo(ruler_start.x + inner_radius, ruler_start.y);
+        ctx.lineTo(ruler_start.x + inner_radius, ruler_start.y - 3);
+        ctx.lineTo(ruler_start.x, ruler_start.y - 3);
+        ctx.moveTo(ruler_start.x, ruler_start.y);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.textAlign = "center";
+        ctx.font = 'normal 10px sans';
+        ctx.fillStyle = '#ffffffff'
+        ctx.fillText(ruler_length + " ls", ruler_start.x + (inner_radius / 2), ruler_start.y - 10, inner_radius);
+
+    }
+    draw_hotbar() {
+        const hotbar_box_width = 32;
+        const hotbar_box_height = 32;
+        const hotbar_box_space = 8;
+        const hotbar_space_from_bottom = 16;
+
+        const hotbar_start_x = (canvas.width / 2) - (hotbar_box_space / 2) -
+            (hotbar_box_width * 5 + hotbar_box_space * 4);
+        
+        const hotbar_start_y = canvas.height - (hotbar_box_height + hotbar_space_from_bottom);
+
+        for(let i = 0; i < 10; i++) {
+            let hotbar_box = {
+                x: hotbar_start_x + (hotbar_box_width + hotbar_box_space) * i,
+                y: hotbar_start_y,
+                width: hotbar_box_width,
+                height: hotbar_box_height,
+                radius: 12
+            }
+            draw_hotbar_box(hotbar_box);
+        }
 
     }
     render() {
@@ -240,6 +290,7 @@ class SpaceView {
         this.draw_background();
         this.draw_compass();
         this.draw_player_bars();
+        this.draw_hotbar();
     }
     physics_update() {
         if (
@@ -313,7 +364,67 @@ new SpaceView();
 //    }
 //}
 
+function draw_hotbar_box(box) {
+
+    // black bottom
+    ctx.beginPath();
+
+    // blue top
+    ctx.beginPath();
+    ctx.moveTo(box.x, box.y);
+    ctx.lineTo(
+        box.x + box.width - box.radius,
+        box.y
+    );
+    ctx.arc(
+        box.x + box.width - box.radius,
+        box.y + box.radius,
+        box.radius,
+        Math.PI * 0.5, 0,
+        false
+    );
+    ctx.lineTo(
+        box.x + box.width,
+        box.y + box.height
+    );
+    ctx.lineTo(
+        box.x + box.radius,
+        box.y + box.height
+    );
+    ctx.arc(
+        box.x + box.radius,
+        box.y + box.height - box.radius,
+        box.radius,
+        Math.PI * 1.5, Math.PI,
+        false
+    );
+    ctx.lineTo(
+        box.x, box.y
+    );
+
+    let gradient = ctx.createRadialGradient(box.x + box.width / 2, box.y + box.height / 2, box.width / 2,
+        box.x + box.width / 2, box.y + box.height / 2, 0);
+
+    gradient.addColorStop(1, '#204040d0');
+    gradient.addColorStop(0.1, '#11212Bd0');
+    
+    //ctx.rect(50, 50, 200, 100);
+    ctx.fillStyle = '#11212Bd0';
+    ctx.fillStyle = gradient;
+    ctx.shadowColor = "black";
+    ctx.shadowBlur = 15;
+
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+}
+
 function draw_player_bar(bar) {
+
+    // black bottom
+    ctx.beginPath();
+
+    // blue top
     ctx.beginPath();
     ctx.moveTo(bar.x, bar.y);
     ctx.lineTo(
@@ -347,7 +458,12 @@ function draw_player_bar(bar) {
     );
     //ctx.rect(50, 50, 200, 100);
     ctx.fillStyle = '#11212Bd0';
+    ctx.shadowColor = "black";
+    ctx.shadowBlur = 15;
+
     ctx.fill();
+
+    ctx.shadowBlur = 0;
 }
 
 </script>
