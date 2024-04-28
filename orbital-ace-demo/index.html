@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Triangle</title>
+<style>
+</style>
+</head>
+<body style="margin: 0px;">
+
+<div style="display:none;">
+    <img id="bg_0" src="assets/bg_0.png" width="960" height="540"/>
+    <img id="bg_1" src="assets/bg_1.png" width="960" height="540"/>
+    <img id="bg_2" src="assets/bg_2.png" width="960" height="540"/>
+    <img id="bg_3" src="assets/bg_3.png" width="960" height="540"/>
+</div>
+
+<canvas id="canvas" style="width: 100%; height: 100vh; display: block; image-rendering: crisp-edges;"></canvas>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+canvas.width = 960;
+canvas.height = 540;
+
+/** @type {CanvasRenderingContext2D} */
+const ctx = canvas.getContext("2d");
+//ctx.scale(2, 2);
+ctx.imageSmoothingEnabled = false;
+
+const image_bg_0 = document.getElementById("bg_0");
+const image_bg_1 = document.getElementById("bg_1");
+const image_bg_2 = document.getElementById("bg_2");
+const image_bg_3 = document.getElementById("bg_3");
+
+const width = 960;
+const height = 540;
+
+const bg_1_parallax = 30;
+const bg_2_parallax = 6;
+const bg_3_parallax = 3;
+
+let upKeyDown = false;
+let downKeyDown = false;
+let leftKeyDown = false;
+let rightKeyDown = false;
+
+document.addEventListener('keydown', function(event) {
+  switch(event.key) {
+    case 'ArrowUp':
+      upKeyDown = true;
+      break;
+    case 'ArrowDown':
+      downKeyDown = true;
+      break;
+    case 'ArrowLeft':
+      leftKeyDown = true;
+      break;
+    case 'ArrowRight':
+      rightKeyDown = true;
+      break;
+  }
+});
+
+document.addEventListener('keyup', function(event) {
+  switch(event.key) {
+    case 'ArrowUp':
+      upKeyDown = false;
+      break;
+    case 'ArrowDown':
+      downKeyDown = false;
+      break;
+    case 'ArrowLeft':
+      leftKeyDown = false;
+      break;
+    case 'ArrowRight':
+      rightKeyDown = false;
+      break;
+  }
+});
+
+const max_velocity = 100;
+
+class SpaceView {
+    constructor() {
+        this.player = {
+            x: 0,
+            y: 0,
+            up_thruster: false,
+            down_thruster: false,
+            left_thruster: false,
+            right_thruster: false,
+            velocity_x: 0,
+            velocity_y: 0,
+        };
+
+        this.run();
+    }
+    draw_player_bars() {
+
+        const space_between_bars = 10;
+
+        const teammate_bar_width = 150;
+        const teammate_bar_height = 30;
+
+        const main_player_bar = {
+            x: 20,
+            y: 20,
+            width: 200,
+            height: 40,
+            radius: 12
+        };
+
+        const sub_player_bar = [];
+
+        for(let i = 0; i < 5; i++) {
+            let teammate_bar = {
+                x: 20,
+                y: 20 + 40 + space_between_bars + i * (teammate_bar_height + space_between_bars),
+                width: teammate_bar_width,
+                height: teammate_bar_height,
+                radius: 12
+            }
+            draw_player_bar(teammate_bar);
+        }
+
+        draw_player_bar(main_player_bar);
+
+    }
+    draw_background() {
+        ctx.drawImage(image_bg_0, 0, 0);
+
+        const bg_1_scroll = {
+            x: (this.player.x / bg_1_parallax) % 960,
+            y: (this.player.y / bg_1_parallax) % 540,
+        }
+
+        const bg_2_scroll = {
+            x: (this.player.x / bg_2_parallax) % 960,
+            y: (this.player.y / bg_2_parallax) % 540,
+        };
+
+        const bg_3_scroll = {
+            x: (this.player.x / bg_3_parallax) % 960,
+            y: (this.player.y / bg_3_parallax) % 540,
+        }
+
+        for (let row = 0; row < 3; row++) { 
+            for (let column = 0; column < 3; column++) {
+                ctx.drawImage(
+                    image_bg_1,
+                    width * (column - 1) - bg_1_scroll.x,
+                    height * (row - 1) - bg_1_scroll.y
+                );
+                ctx.drawImage(
+                    image_bg_2,
+                    width * (column - 1) - bg_2_scroll.x,
+                    height * (row - 1) - bg_2_scroll.y
+                );
+                ctx.drawImage(
+                    image_bg_3,
+                    width * (column - 1) - bg_3_scroll.x,
+                    height * (row - 1) - bg_3_scroll.y
+                );
+            }
+        }
+        
+        //ctx.drawImage(image_bg_3, 0, 0);
+    }
+    draw_compass() {
+        let radius = 92;
+        let x = 17;
+        let y = height - radius * 2 - x;
+
+        ctx.beginPath();
+        ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
+        /** @type {CanvasGradient} */
+        let outer_gradient = ctx.createRadialGradient(x + radius, y + radius, radius, x + radius, y + radius, 0);
+        outer_gradient.addColorStop(0.30, '#040404f8');
+        outer_gradient.addColorStop(0.235, '#000000f8');
+        outer_gradient.addColorStop(0.0001, '#00000000');
+
+        ctx.fillStyle = outer_gradient;
+        ctx.fill();
+
+        // draw blits here
+
+        let inner_radius = radius - radius * 0.235;
+
+        // crosshairs
+        
+        ctx.strokeStyle = "#101010ff";
+        ctx.lineWidth = 1;
+
+        // Set the line dash pattern
+        ctx.setLineDash([6, 3]); // 5 pixels on, 5 pixels off
+
+        // Draw the line
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y + radius); // Start point
+        ctx.lineTo(x + radius, y + radius - inner_radius); // End point
+        ctx.stroke();
+        ctx.moveTo(x + radius, y + radius); // Start point
+        ctx.lineTo(x + radius + inner_radius, y + radius); // End point
+        ctx.stroke();
+        ctx.moveTo(x + radius, y + radius); // Start point
+        ctx.lineTo(x + radius - inner_radius, y + radius); // End point
+        ctx.stroke();
+        ctx.moveTo(x + radius, y + radius); // Start point
+        ctx.lineTo(x + radius, y + radius + inner_radius); // End point
+        ctx.stroke();
+
+        // edge-glare
+        ctx.beginPath();
+        ctx.arc(x + radius, y + radius, inner_radius, 0, Math.PI * 2);
+        let edge_glare_gradient = ctx.createRadialGradient(x + radius, y + radius, inner_radius, x + radius, y + radius, 0);
+        edge_glare_gradient.addColorStop(0.01, '#111a21f8');
+        edge_glare_gradient.addColorStop(0.15, '#00000000');
+        ctx.fillStyle = edge_glare_gradient;
+        ctx.fill();
+
+        // glare
+        let glare_radius = 14;
+        let glare_x = 30;
+        let glare_y = -30
+        ctx.beginPath();
+        ctx.arc(x + radius + glare_x, y + radius + glare_y, 16, 0, Math.PI * 2);
+        let glare_gradient = ctx.createRadialGradient(x + radius + glare_x, y + radius + glare_y, glare_radius, x + radius + glare_x, y + radius + glare_y, 0);
+        glare_gradient.addColorStop(0.01, '#00000000');
+        glare_gradient.addColorStop(0.9, '#ffffff20');
+        glare_gradient.addColorStop(1.0, '#ffffff20');
+        ctx.fillStyle = glare_gradient;
+        ctx.fill();
+
+
+    }
+    render() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        this.draw_background();
+        this.draw_compass();
+        this.draw_player_bars();
+    }
+    physics_update() {
+        if (
+            this.player.down_thruster &&
+            this.player.velocity_y < max_velocity
+        ) {
+            this.player.velocity_y++;
+        } else if (
+            this.player.up_thruster &&
+            this.player.velocity_y > (0 - max_velocity)
+        ) {
+            this.player.velocity_y--;
+        }
+        if (
+            this.player.right_thruster &&
+            this.player.velocity_x < max_velocity
+        ) {
+            this.player.velocity_x++;
+        } else if (
+            this.player.left_thruster &&
+            this.player.velocity_x > (0 - max_velocity)
+        ) {
+            this.player.velocity_x--;
+        }
+
+        this.player.x += this.player.velocity_x * 0.3;
+        this.player.y += this.player.velocity_y * 0.3;
+    }
+    update() {
+        if (upKeyDown && !downKeyDown) {
+            this.player.up_thruster = true;
+            this.player.down_thruster = false;
+        } else if (downKeyDown && !upKeyDown) {
+            this.player.up_thruster = false;
+            this.player.down_thruster = true;
+        } else {
+            this.player.up_thruster = false;
+            this.player.down_thruster = false;
+        }
+
+        if (leftKeyDown && !rightKeyDown) {
+            this.player.left_thruster = true;
+            this.player.right_thruster = false;
+        } else if (rightKeyDown && !leftKeyDown) {
+            this.player.right_thruster = true;
+            this.player.left_thruster = false;
+        } else {
+            this.player.left_thruster = false;
+            this.player.right_thruster = false;
+        }
+
+        this.physics_update();
+    }
+    async run() {
+        while(true) {
+            this.update();
+            this.render();
+            //this.player.x -= 0.5;
+            //this.player.y++;
+            await new Promise(resolve => setTimeout(resolve, 15)); // Add delay between iterations
+        }
+    }
+}
+
+new SpaceView();
+
+//async function game() {
+//    while(true) {
+//        render_scene();
+//        await new Promise(resolve => setTimeout(resolve, 15)); // Add delay between iterations
+//    }
+//}
+
+function draw_player_bar(bar) {
+    ctx.beginPath();
+    ctx.moveTo(bar.x, bar.y);
+    ctx.lineTo(
+        bar.x + bar.width - bar.radius,
+        bar.y
+    );
+    ctx.arc(
+        bar.x + bar.width - bar.radius,
+        bar.y + bar.radius,
+        bar.radius,
+        Math.PI * 0.5, 0,
+        false
+    );
+    ctx.lineTo(
+        bar.x + bar.width,
+        bar.y + bar.height
+    );
+    ctx.lineTo(
+        bar.x + bar.radius,
+        bar.y + bar.height
+    );
+    ctx.arc(
+        bar.x + bar.radius,
+        bar.y + bar.height - bar.radius,
+        bar.radius,
+        Math.PI * 1.5, Math.PI,
+        false
+    );
+    ctx.lineTo(
+        bar.x, bar.y
+    );
+    //ctx.rect(50, 50, 200, 100);
+    ctx.fillStyle = '#11212Bd0';
+    ctx.fill();
+}
+
+</script>
+
+</body>
+</html>
